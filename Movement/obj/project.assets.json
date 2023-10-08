@@ -8,23 +8,23 @@
     "net5.0": []
   },
   "packageFolders": {
-    "C:\\Users\\pg25gaby\\.nuget\\packages\\": {},
+    "C:\\Users\\pg25xian\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\pg25gaby\\Desktop\\Movement\\Movement.csproj",
+      "projectUniqueName": "C:\\Users\\pg25xian\\source\\repos\\C#\\PacManTwistSim\\Movement\\Movement.csproj",
       "projectName": "Movement",
-      "projectPath": "C:\\Users\\pg25gaby\\Desktop\\Movement\\Movement.csproj",
-      "packagesPath": "C:\\Users\\pg25gaby\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\pg25gaby\\Desktop\\Movement\\obj\\",
+      "projectPath": "C:\\Users\\pg25xian\\source\\repos\\C#\\PacManTwistSim\\Movement\\Movement.csproj",
+      "packagesPath": "C:\\Users\\pg25xian\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\pg25xian\\source\\repos\\C#\\PacManTwistSim\\Movement\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\pg25gaby\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\pg25xian\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
