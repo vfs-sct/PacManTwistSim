@@ -14,7 +14,7 @@ namespace Movement
 
         public void Spawn(Map levelMap)
         {
-            Console.Clear();
+            //Console.Clear();
             levelMap.SetPosition(Y, X, symbol);
         }
 
