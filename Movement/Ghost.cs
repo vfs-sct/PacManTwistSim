@@ -9,25 +9,27 @@ namespace Movement
 {
     internal class Ghost:Character
     {
-        List<Direction> pathList = new List<Direction>();
+        //List<Direction> pathList = new List<Direction>();
         int pathListIndex = 0;
-        enum Direction
-        {
-            Up,
-            Right,
-            Down,
-            Left,
-            Stop
-        }
-        public Ghost(int x,int y)
+        //enum Direction
+        //{
+        //    Up,
+        //    Right,
+        //    Down,
+        //    Left,
+        //    Stop
+        //}
+        public Ghost(int x,int y, int[][] coorArr)
         {
             X = x;
             Y = y;
+            PathCoorArr = coorArr;
+            PathList = new List<Direction>();
             Type = "ghost";
             Symbol = '†';
         }
 
-        public void SetRoad(Map levelMap, int[][] coorArr)
+        public void SetRoad(Map levelMap)
         {
             int[] currentPos = { X,Y };
             Direction direction = Direction.Stop;
@@ -35,7 +37,7 @@ namespace Movement
             //Console.WriteLine("StartPoint {0} EndPoint {1}", currentPos[0], coorArr[0][0]);
             //Console.WriteLine("StartPoint {0} EndPoint {1}", currentPos[1], coorArr[0][1]);
 
-            foreach (var item in coorArr)
+            foreach (var item in PathCoorArr)
             {
                 while (currentPos[0] != item[0])
                 {
@@ -49,7 +51,7 @@ namespace Movement
                         direction = Direction.Left;
                         currentPos[0] -= 1;
                     }
-                    pathList.Add(direction);
+                    PathList.Add(direction);
                 }
                 while (currentPos[1] != item[1])
                 {
@@ -63,19 +65,20 @@ namespace Movement
                         direction = Direction.Up;
                         currentPos[1] -= 1;
                     }
-                    pathList.Add(direction);
+                    PathList.Add(direction);
                 }
             }
+
         }
 
         public void Movement(Map levelMap)
         {
-            if(pathListIndex == pathList.Count)
+            if(pathListIndex == PathList.Count)
             {
-                pathList.Reverse();
+                PathList.Reverse();
                 List<Direction> pathListReverse = new List<Direction>();
                 int index = 0;
-                foreach (var item in pathList)
+                foreach (var item in PathList)
                 {
                     if (item == Direction.Left)
                     {
@@ -95,10 +98,10 @@ namespace Movement
                     }
                     index++;
                 }
-                pathList = pathListReverse;
+                PathList = pathListReverse;
                 pathListIndex = 0;
             }
-            if (pathList[pathListIndex] == Direction.Left)
+            if (PathList[pathListIndex] == Direction.Left)
             {
                 if (levelMap.map[Y, X - 1] != '#')
                 {
@@ -107,7 +110,7 @@ namespace Movement
                 }
                 Spawn(levelMap);
             }
-            else if (pathList[pathListIndex] == Direction.Right)
+            else if (PathList[pathListIndex] == Direction.Right)
             {
                 if (levelMap.map[Y, X + 1] != '#')
                 {
@@ -116,7 +119,7 @@ namespace Movement
                 }
                 Spawn(levelMap);
             }
-            else if (pathList[pathListIndex] == Direction.Up)
+            else if (PathList[pathListIndex] == Direction.Up)
             {
                 if (levelMap.map[Y - 1, X] != '#')
                 {
@@ -125,7 +128,7 @@ namespace Movement
                 }
                 Spawn(levelMap);
             }
-            else if (pathList[pathListIndex] == Direction.Down)
+            else if (PathList[pathListIndex] == Direction.Down)
             {
                 if (levelMap.map[Y + 1, X] != '#')
                 {
@@ -139,7 +142,7 @@ namespace Movement
                 Console.WriteLine("Err");
             }
 
-            if(pathListIndex != pathList.Count)
+            if(pathListIndex != PathList.Count)
             {
                 pathListIndex++;
             }
