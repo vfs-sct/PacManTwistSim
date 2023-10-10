@@ -11,6 +11,7 @@ namespace Movement
     {
         List<Direction> pathList = new List<Direction>();
         int pathListIndex = 0;
+        bool weakness;
         enum Direction
         {
             Up,
@@ -25,6 +26,7 @@ namespace Movement
             Y = y;
             Type = "ghost";
             Symbol = '†';
+            weakness = false;
         }
 
         public void SetRoad(Map levelMap, int[][] coorArr)
@@ -144,6 +146,12 @@ namespace Movement
                 pathListIndex++;
             }
             
+        }
+
+        public bool Weakness
+        {
+            get { return weakness; }
+            set { weakness = value; }
         }
 
     }

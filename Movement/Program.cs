@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Timers;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace Movement
 {
@@ -11,13 +12,14 @@ namespace Movement
         public static Timer myTimer = new Timer(1000);
         public static Map level1Map = new Map();
         public static List<Character> characters = new List<Character>();
+        public static int score = 0;
         public static Ghost myGhost;
         public static PacMan myPacMan;
+        public static int ghostEaten = 0;
 
         static void Main(string[] args)
         {
             ActivateInterval();
-
             PacMan pacman = new PacMan();
             characters.Add(pacman);
             myPacMan = pacman;
@@ -29,6 +31,20 @@ namespace Movement
 
             pacman.Spawn(level1Map);
             ghost.Spawn(level1Map);
+
+            level1Map.InitializeItemMap();
+            for (int i = 0; i < level1Map.itemMap.GetLength(0); i++) 
+            { 
+                for (int j = 0; j < level1Map.itemMap.GetLength(1); j++)
+                {
+                    BaseDot dotCell = new BaseDot();
+                    if (level1Map.map[i,j] != '#' && level1Map.map[i, j] != '†' && level1Map.map[i, j] != '■')
+                    {
+                        level1Map.map[i, j] = dotCell.Symbol;
+                        level1Map.itemMap[i, j] = dotCell;
+                    }
+                }
+            }
 
             level1Map.PrintMap(characters);
 
@@ -42,16 +58,46 @@ namespace Movement
             while (playing)
             {
                 pacman.MoveWithInput(level1Map);
+                if (level1Map.itemMap[pacman.Y, pacman.X] != null && level1Map.itemMap[pacman.Y, pacman.X].Type == "dot")
+                {
+                    score += level1Map.itemMap[pacman.Y, pacman.X].Points;
+                    level1Map.itemMap[pacman.Y, pacman.X] = null;
+                }
                 level1Map.PrintMap(characters);
+                Console.WriteLine("Score: {0}", score);
                 checkGameOver();
             }
         }
 
         private static void checkGameOver()
         {
-            if(myGhost.X == myPacMan.X && myGhost.Y == myPacMan.Y)
+            if(myGhost.X == myPacMan.X && myGhost.Y == myPacMan.Y && myGhost.Weakness != false)
             {
                 gameOver();
+            }
+            else if(myGhost.X == myPacMan.X && myGhost.Y == myPacMan.Y && myGhost.Weakness == true)
+            {
+                switch(ghostEaten)
+                {
+                    case 0:
+                        ghostEaten++;
+                        score += 200;
+                        break;
+                    case 1:
+                        ghostEaten++;
+                        score += 400;
+                        break;
+                    case 2:
+                        ghostEaten++;
+                        score += 800;
+                        break;
+                    case 3:
+                        ghostEaten++;
+                        score += 1600;
+                        break;
+                    default: 
+                        break;
+                }
             }
         }
 
