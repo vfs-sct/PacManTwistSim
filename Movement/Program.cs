@@ -28,6 +28,7 @@ namespace Movement
             asignGhost();
             pacman.Spawn(level1Map);
 
+
             level1Map.InitializeItemMap();
             for (int i = 0; i < level1Map.itemMap.GetLength(0); i++) 
             { 
@@ -36,19 +37,13 @@ namespace Movement
                     BaseDot dotCell = new BaseDot();
                     if (level1Map.map[i,j] != '#' && level1Map.map[i, j] != '†' && level1Map.map[i, j] != '■')
                     {
-                        if(i == 14 && j == 66)
-                        {
-                            BigDot bigDotCell = new BigDot();
-                            level1Map.map[i, j] = bigDotCell.Symbol;
-                            level1Map.itemMap[i, j] = bigDotCell;
-                        } else
-                        {
-                            level1Map.map[i, j] = dotCell.Symbol;
-                            level1Map.itemMap[i, j] = dotCell;
-                        }
+                        level1Map.map[i, j] = dotCell.Symbol;
+                        level1Map.itemMap[i, j] = dotCell;
                     }
                 }
             }
+
+            CreateBigDotsAndCherry();
 
             level1Map.PrintMap(characters);
 
@@ -60,14 +55,15 @@ namespace Movement
             while (playing)
             {
                 pacman.MoveWithInput(level1Map);
-                if (level1Map.itemMap[pacman.Y, pacman.X] != null && level1Map.itemMap[pacman.Y, pacman.X].Type == "dot")
+                if (level1Map.itemMap[pacman.Y, pacman.X] != null && (level1Map.itemMap[pacman.Y, pacman.X].Type == "dot" || level1Map.itemMap[pacman.Y, pacman.X].Type == "cherry"))
                 {
                     score += level1Map.itemMap[pacman.Y, pacman.X].Points;
                     level1Map.itemMap[pacman.Y, pacman.X] = null;
-                } else if (level1Map.itemMap[pacman.Y, pacman.X] != null && level1Map.itemMap[pacman.Y, pacman.X].Type == "bigDot")
+                } 
+                else if (level1Map.itemMap[pacman.Y, pacman.X] != null && level1Map.itemMap[pacman.Y, pacman.X].Type == "bigDot")
                 {
                     score += level1Map.itemMap[pacman.Y, pacman.X].Points;
-                    //level1Map.itemMap[pacman.Y, pacman.X].PowerUp(ghostArr);
+                    level1Map.itemMap[pacman.Y, pacman.X].PowerUp(ghostArr);
                     level1Map.itemMap[pacman.Y, pacman.X] = null;
                 }
                 level1Map.PrintMap(characters);
@@ -175,6 +171,28 @@ namespace Movement
                 level1Map.PrintMap(characters);
                 checkGameOver();
             }
+        }
+
+        private static void CreateBigDotsAndCherry()
+        {
+            int amountOfBigDots = 4;
+            Random rdm = new Random();
+            while (amountOfBigDots >= 0)
+            {
+                int randomX = rdm.Next(1, level1Map.map.GetLength(1) - 1);
+                int randomY = rdm.Next(1, level1Map.map.GetLength(0) - 1);
+
+                BigDot bigDotCell = new BigDot(randomX, randomY);
+                level1Map.itemMap[randomY, randomX] = bigDotCell;
+                bigDotCell.Spawn(level1Map);
+                amountOfBigDots--;
+            }
+
+            int randomCherryX = rdm.Next(1, level1Map.map.GetLength(1) - 1);
+            int randomCherryY = rdm.Next(1, level1Map.map.GetLength(0) - 1);
+            Cherry randomCherry = new Cherry(randomCherryX, randomCherryY);
+            level1Map.itemMap[randomCherryY, randomCherryX] = randomCherry;
+            randomCherry.Spawn(level1Map);
         }
     }
 
