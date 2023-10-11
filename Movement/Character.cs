@@ -6,11 +6,21 @@ using System.Threading.Tasks;
 
 namespace Movement
 {
+    public enum Direction
+    {
+        Up,
+        Right,
+        Down,
+        Left,
+        Stop
+    }
     internal class Character
     {
         int x, y;
         char symbol;
         string type;
+        int[][] pathCoorArr;
+        List<Direction> pathList;
 
         public void Spawn(Map levelMap)
         {
@@ -41,5 +51,18 @@ namespace Movement
             get { return symbol; }
             set { symbol = value; }
         }
+
+        public int[][] PathCoorArr
+        {
+            get { return pathCoorArr; }
+            set { pathCoorArr = value; }
+        }
+
+        public List<Direction> PathList
+        {
+            get { return pathList; }
+            set { pathList = value; }
+        }
+
     }
 }

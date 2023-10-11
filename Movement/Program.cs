@@ -12,10 +12,11 @@ namespace Movement
         public static Timer myTimer = new Timer(1000);
         public static Map level1Map = new Map();
         public static List<Character> characters = new List<Character>();
-        public static int score = 0;
-        public static Ghost myGhost;
+        public static List<Ghost> ghostArr = new List<Ghost>();
         public static PacMan myPacMan;
         public static int ghostEaten = 0;
+        public static int score = 0;
+        public static bool playing = true;
 
         static void Main(string[] args)
         {
@@ -24,13 +25,8 @@ namespace Movement
             characters.Add(pacman);
             myPacMan = pacman;
 
-            Ghost ghost = new Ghost(1,1);
-            characters.Add(ghost);
-            myGhost = ghost;
-
-
+            asignGhost();
             pacman.Spawn(level1Map);
-            ghost.Spawn(level1Map);
 
             level1Map.InitializeItemMap();
             for (int i = 0; i < level1Map.itemMap.GetLength(0); i++) 
@@ -40,27 +36,38 @@ namespace Movement
                     BaseDot dotCell = new BaseDot();
                     if (level1Map.map[i,j] != '#' && level1Map.map[i, j] != '†' && level1Map.map[i, j] != '■')
                     {
-                        level1Map.map[i, j] = dotCell.Symbol;
-                        level1Map.itemMap[i, j] = dotCell;
+                        if(i == 14 && j == 66)
+                        {
+                            BigDot bigDotCell = new BigDot();
+                            level1Map.map[i, j] = bigDotCell.Symbol;
+                            level1Map.itemMap[i, j] = bigDotCell;
+                        } else
+                        {
+                            level1Map.map[i, j] = dotCell.Symbol;
+                            level1Map.itemMap[i, j] = dotCell;
+                        }
                     }
                 }
             }
 
             level1Map.PrintMap(characters);
 
-            int[][] coorArr = new int[2][];
-            coorArr[0] = new int[] { 1, 10 };
-            coorArr[1] = new int[] { 5, 10 };
+            foreach (var gho in ghostArr)
+            {
+                gho.SetRoad(level1Map);
+            }
 
-            myGhost.SetRoad(level1Map, coorArr);
-
-            bool playing = true;
             while (playing)
             {
                 pacman.MoveWithInput(level1Map);
                 if (level1Map.itemMap[pacman.Y, pacman.X] != null && level1Map.itemMap[pacman.Y, pacman.X].Type == "dot")
                 {
                     score += level1Map.itemMap[pacman.Y, pacman.X].Points;
+                    level1Map.itemMap[pacman.Y, pacman.X] = null;
+                } else if (level1Map.itemMap[pacman.Y, pacman.X] != null && level1Map.itemMap[pacman.Y, pacman.X].Type == "bigDot")
+                {
+                    score += level1Map.itemMap[pacman.Y, pacman.X].Points;
+                    //level1Map.itemMap[pacman.Y, pacman.X].PowerUp(ghostArr);
                     level1Map.itemMap[pacman.Y, pacman.X] = null;
                 }
                 level1Map.PrintMap(characters);
@@ -69,34 +76,68 @@ namespace Movement
             }
         }
 
+        private static void asignGhost()
+        {
+            int[][] ghostCoorArr1 = new int[2][];
+            ghostCoorArr1[0] = new int[] { 1, 10 };
+            ghostCoorArr1[1] = new int[] { 5, 10 };
+
+            Ghost ghost = new Ghost(1, 1, ghostCoorArr1);
+            characters.Add(ghost);
+            ghostArr.Add(ghost);
+            ghost.Spawn(level1Map);
+
+            int[][] ghostCoorArr2 = new int[2][];
+            ghostCoorArr2[0] = new int[] { 68, 20 };
+            ghostCoorArr2[1] = new int[] { 75, 20 };
+
+            Ghost ghost2 = new Ghost(68, 15, ghostCoorArr2);
+            characters.Add(ghost2);
+            ghostArr.Add(ghost2);
+            ghost2.Spawn(level1Map);
+
+            int[][] ghostCoorArr3 = new int[2][];
+            ghostCoorArr3[0] = new int[] { 68, 20 };
+            ghostCoorArr3[1] = new int[] { 68, 15 };
+
+            Ghost ghost3 = new Ghost(75, 20, ghostCoorArr3);
+            characters.Add(ghost3);
+            ghostArr.Add(ghost3);
+            ghost3.Spawn(level1Map);
+        }
+
         private static void checkGameOver()
         {
-            if(myGhost.X == myPacMan.X && myGhost.Y == myPacMan.Y && myGhost.Weakness != false)
+            foreach (var ghost in ghostArr)
             {
-                gameOver();
-            }
-            else if(myGhost.X == myPacMan.X && myGhost.Y == myPacMan.Y && myGhost.Weakness == true)
-            {
-                switch(ghostEaten)
+                if (ghost.X == myPacMan.X && ghost.Y == myPacMan.Y && ghost.Weakness == false)
                 {
-                    case 0:
-                        ghostEaten++;
-                        score += 200;
-                        break;
-                    case 1:
-                        ghostEaten++;
-                        score += 400;
-                        break;
-                    case 2:
-                        ghostEaten++;
-                        score += 800;
-                        break;
-                    case 3:
-                        ghostEaten++;
-                        score += 1600;
-                        break;
-                    default: 
-                        break;
+                    playing = false;
+                    gameOver();
+                }
+                else if(ghost.X == myPacMan.X && ghost.Y == myPacMan.Y && ghost.Weakness == true)
+                {
+                    switch (ghostEaten)
+                    {
+                        case 0:
+                            ghostEaten++;
+                            score += 200;
+                            break;
+                        case 1:
+                            ghostEaten++;
+                            score += 400;
+                            break;
+                        case 2:
+                            ghostEaten++;
+                            score += 800;
+                            break;
+                        case 3:
+                            ghostEaten++;
+                            score += 1600;
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
         }
@@ -104,6 +145,7 @@ namespace Movement
         private static void gameOver()
         {
             Console.Clear();
+            
             stopInterval();
             Console.WriteLine("GameOver");
         }
@@ -126,7 +168,10 @@ namespace Movement
             count++;
             if (count % 2 == 0)
             {
-                myGhost.Movement(level1Map);
+                foreach (var ghost in ghostArr)
+                {
+                    ghost.Movement(level1Map);
+                }
                 level1Map.PrintMap(characters);
                 checkGameOver();
             }
@@ -134,3 +179,4 @@ namespace Movement
     }
 
 }
+
