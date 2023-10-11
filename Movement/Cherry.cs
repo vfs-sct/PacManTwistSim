@@ -8,11 +8,13 @@ namespace Movement
 {
     internal class Cherry:Item
     {
-        public Cherry() 
+        public Cherry(int x, int y) 
         {
-        Symbol = '@';
-        Points = 10;
-        Type = "cherry";
+            X = x;
+            Y = y;
+            Symbol = '@';
+            Points = 100;
+            Type = "cherry";
         }
     }
 }

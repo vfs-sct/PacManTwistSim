@@ -9,8 +9,10 @@ namespace Movement
     internal class BigDot:Item
     {
 
-        public BigDot()
+        public BigDot(int x, int y)
         {
+            X = x;
+            Y = y;
             Symbol = '&';
             Points = 50;
             Type = "bigDot";
