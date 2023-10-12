@@ -75,31 +75,31 @@ namespace Movement
         private static void asignGhost()
         {
             int[][] ghostCoorArr1 = new int[2][];
-            ghostCoorArr1[0] = new int[] { 1, 10 };
-            ghostCoorArr1[1] = new int[] { 5, 10 };
+            ghostCoorArr1[0] = new int[] { 13, 5 };
+            ghostCoorArr1[1] = new int[] { 12, 13 };
 
-            Ghost ghost = new Ghost(1, 1, ghostCoorArr1);
+            Ghost ghost = new Ghost(15, 11, ghostCoorArr1);
             characters.Add(ghost);
             ghostArr.Add(ghost);
             ghost.Spawn(level1Map);
 
-            int[][] ghostCoorArr2 = new int[2][];
-            ghostCoorArr2[0] = new int[] { 68, 20 };
-            ghostCoorArr2[1] = new int[] { 75, 20 };
+            //int[][] ghostCoorArr2 = new int[2][];
+            //ghostCoorArr2[0] = new int[] { 68, 20 };
+            //ghostCoorArr2[1] = new int[] { 75, 20 };
 
-            Ghost ghost2 = new Ghost(68, 15, ghostCoorArr2);
-            characters.Add(ghost2);
-            ghostArr.Add(ghost2);
-            ghost2.Spawn(level1Map);
+            //Ghost ghost2 = new Ghost(68, 15, ghostCoorArr2);
+            //characters.Add(ghost2);
+            //ghostArr.Add(ghost2);
+            //ghost2.Spawn(level1Map);
 
-            int[][] ghostCoorArr3 = new int[2][];
-            ghostCoorArr3[0] = new int[] { 68, 20 };
-            ghostCoorArr3[1] = new int[] { 68, 15 };
+            //int[][] ghostCoorArr3 = new int[2][];
+            //ghostCoorArr3[0] = new int[] { 26, 4 };
+            //ghostCoorArr3[1] = new int[] { 26, 2 };
 
-            Ghost ghost3 = new Ghost(75, 20, ghostCoorArr3);
-            characters.Add(ghost3);
-            ghostArr.Add(ghost3);
-            ghost3.Spawn(level1Map);
+            //Ghost ghost3 = new Ghost(34, 4, ghostCoorArr3);
+            //characters.Add(ghost3);
+            //ghostArr.Add(ghost3);
+            //ghost3.Spawn(level1Map);
         }
 
         private static void checkGameOver()
@@ -213,7 +213,6 @@ namespace Movement
                 }
                 else if (ghost.GhostState == Ghost.State.movingInPath)
                 {
-                    ghost.Movement(level1Map);
                     ghost.Movement(level1Map);
                 }
                 else if ((ghost.DefaultPositionX != ghost.X || ghost.DefaultPositionY != ghost.Y) && ghost.GhostState != Ghost.State.movingInPath)

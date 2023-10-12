@@ -10,8 +10,8 @@ namespace Movement
     {
         public PacMan()
         {
-            X = 67;
-            Y = 14;
+            X = 2;
+            Y = 2;
             Type = "pacman";
             Symbol = '■';
         }
