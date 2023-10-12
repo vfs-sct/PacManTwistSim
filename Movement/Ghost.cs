@@ -112,7 +112,6 @@ namespace Movement
         {
             if (targetX > X && targetY > Y)
             {
-                Console.WriteLine("cuadrante 1");
                 if (TryDown(levelMap))
                 { return; }
                 else if(TryRight(levelMap))
@@ -127,7 +126,7 @@ namespace Movement
             }
             else if (targetX < X && targetY > Y)
             {
-                Console.WriteLine("cuadrante 2");
+                
 
                 if (TryLeft(levelMap))
                 { return; }
@@ -143,8 +142,7 @@ namespace Movement
             }
             else if (targetX > X && targetY < Y)
             {
-                Console.WriteLine("cuadrante 3");
-
+                
                 if (TryUp(levelMap))
                 { return; }
                 else if (TryRight(levelMap))
@@ -159,8 +157,7 @@ namespace Movement
             }
             else if (targetX < X && targetY < Y)
             {
-                Console.WriteLine("cuadrante 4");
-
+               
                 if (TryRight(levelMap))
                 { return; }
                 else if (TryUp(levelMap))
@@ -244,26 +241,33 @@ namespace Movement
                 { return; }
                 else if (TryLeft(levelMap))
                 { return; }
-                else { Console.WriteLine("Error ghost trapped"); 
+                else
+                {
+                    Console.WriteLine("Error ghost trapped");
                     InvertLastDirectionInList();
-                    return; }
+                    return;
+                }
             }
             else if (targetX > X && targetY < Y)
             {
-                if (TryRight(levelMap))
+                if (TryLeft(levelMap))
                 { return; }
                 else if (TryDown(levelMap))
                 { return; }
-                else if (TryLeft(levelMap))
+                else if (TryRight(levelMap))
                 { return; }
                 else if (TryUp(levelMap))
                 { return; }
-                else { Console.WriteLine("Error ghost trapped"); 
+                else
+                {
+                    Console.WriteLine("Error ghost trapped");
                     InvertLastDirectionInList();
-                    return; }
+                    return;
+                }
             }
             else if (targetX < X && targetY > Y)
             {
+
 
                 if (TryUp(levelMap))
                 { return; }
@@ -273,24 +277,31 @@ namespace Movement
                 { return; }
                 else if (TryLeft(levelMap))
                 { return; }
-                else { Console.WriteLine("Error ghost trapped"); 
+                else
+                {
+                    Console.WriteLine("Error ghost trapped");
                     InvertLastDirectionInList();
-                    return; }
+                    return;
+                }
             }
             else if (targetX > X && targetY > Y)
             {
 
-                if (TryLeft(levelMap))
+
+                if (TryRight(levelMap))
                 { return; }
                 else if (TryUp(levelMap))
                 { return; }
-                else if (TryRight(levelMap))
+                else if (TryLeft(levelMap))
                 { return; }
                 else if (TryDown(levelMap))
                 { return; }
-                else { Console.WriteLine("Error ghost trapped"); 
+                else
+                {
+                    Console.WriteLine("Error ghost trapped");
                     InvertLastDirectionInList();
-                    return; }
+                    return;
+                }
             }
             else if (targetX == X && targetY >= Y)
             {
