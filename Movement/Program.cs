@@ -30,12 +30,12 @@ namespace Movement
 
 
             level1Map.InitializeItemMap();
-            for (int i = 0; i < level1Map.itemMap.GetLength(0); i++) 
-            { 
+            for (int i = 0; i < level1Map.itemMap.GetLength(0); i++)
+            {
                 for (int j = 0; j < level1Map.itemMap.GetLength(1); j++)
                 {
                     BaseDot dotCell = new BaseDot();
-                    if (level1Map.map[i,j] != '#' && level1Map.map[i, j] != '†' && level1Map.map[i, j] != '■')
+                    if (level1Map.map[i, j] != '#' && level1Map.map[i, j] != '†' && level1Map.map[i, j] != '■')
                     {
                         level1Map.map[i, j] = dotCell.Symbol;
                         level1Map.itemMap[i, j] = dotCell;
@@ -47,10 +47,10 @@ namespace Movement
 
             level1Map.PrintMap(characters);
 
-            foreach (var gho in ghostArr)
-            {
-                gho.SetRoad(level1Map);
-            }
+            //foreach (var gho in ghostArr)
+            //{
+            //    gho.SetRoad(level1Map);
+            //}
 
             while (playing)
             {
@@ -59,7 +59,7 @@ namespace Movement
                 {
                     score += level1Map.itemMap[pacman.Y, pacman.X].Points;
                     level1Map.itemMap[pacman.Y, pacman.X] = null;
-                } 
+                }
                 else if (level1Map.itemMap[pacman.Y, pacman.X] != null && level1Map.itemMap[pacman.Y, pacman.X].Type == "bigDot")
                 {
                     score += level1Map.itemMap[pacman.Y, pacman.X].Points;
@@ -111,7 +111,7 @@ namespace Movement
                     playing = false;
                     gameOver();
                 }
-                else if(ghost.X == myPacMan.X && ghost.Y == myPacMan.Y && ghost.Weakness == true)
+                else if (ghost.X == myPacMan.X && ghost.Y == myPacMan.Y && ghost.Weakness == true)
                 {
                     switch (ghostEaten)
                     {
@@ -141,7 +141,7 @@ namespace Movement
         private static void gameOver()
         {
             Console.Clear();
-            
+
             stopInterval();
             Console.WriteLine("GameOver");
         }
@@ -154,7 +154,8 @@ namespace Movement
             myTimer.Start();
         }
 
-        private static void stopInterval() {
+        private static void stopInterval()
+        {
             myTimer.Enabled = false;
         }
 
@@ -164,73 +165,71 @@ namespace Movement
             //count++;
             //if (count % 2 == 0)
             //{
-                foreach (var ghost in ghostArr)
+            foreach (var ghost in ghostArr)
+            {
+                if (ghost.X - 2 == myPacMan.X &&
+                    ((ghost.Y == myPacMan.Y && level1Map.map[ghost.Y, ghost.X - 1] != '#')
+                    || (ghost.Y - 2 == myPacMan.Y && level1Map.map[ghost.Y - 1, ghost.X - 1] != '#')
+                    || (ghost.Y - 1 == myPacMan.Y && level1Map.map[ghost.Y - 1, ghost.X - 1] != '#')
+                    || (ghost.Y + 1 == myPacMan.Y && level1Map.map[ghost.Y + 1, ghost.X - 1] != '#')
+                    || (ghost.Y + 2 == myPacMan.Y && level1Map.map[ghost.Y + 1, ghost.X - 1] != '#')
+                    )
+                    || ghost.X - 1 == myPacMan.X &&
+                    ((ghost.Y == myPacMan.Y)
+                    || (ghost.Y - 2 == myPacMan.Y && level1Map.map[ghost.Y - 1, ghost.X - 1] != '#')
+                    || (ghost.Y - 1 == myPacMan.Y)
+                    || (ghost.Y + 1 == myPacMan.Y)
+                    || (ghost.Y + 2 == myPacMan.Y && level1Map.map[ghost.Y + 1, ghost.X - 1] != '#')
+                    )
+                    || ghost.X == myPacMan.X &&
+                    (((ghost.Y - 2 == myPacMan.Y && level1Map.map[ghost.Y - 1, ghost.X] != '#')
+                    || (ghost.Y - 1 == myPacMan.Y)
+                    || (ghost.Y + 1 == myPacMan.Y)
+                    || (ghost.Y + 2 == myPacMan.Y && level1Map.map[ghost.Y + 1, ghost.X] != '#')
+                    )
+                    || ghost.X + 1 == myPacMan.X &&
+                    ((ghost.Y == myPacMan.Y)
+                    || (ghost.Y - 2 == myPacMan.Y && level1Map.map[ghost.Y - 1, ghost.X - 1] != '#')
+                    || (ghost.Y - 1 == myPacMan.Y)
+                    || (ghost.Y + 1 == myPacMan.Y)
+                    || (ghost.Y + 2 == myPacMan.Y && level1Map.map[ghost.Y + 1, ghost.X - 1] != '#')
+                    )
+                    || ghost.X + 2 == myPacMan.X &&
+                    ((ghost.Y == myPacMan.Y && level1Map.map[ghost.Y, ghost.X + 1] != '#')
+                    || (ghost.Y - 2 == myPacMan.Y && level1Map.map[ghost.Y - 1, ghost.X + 1] != '#')
+                    || (ghost.Y - 1 == myPacMan.Y && level1Map.map[ghost.Y - 1, ghost.X + 1] != '#')
+                    || (ghost.Y + 1 == myPacMan.Y && level1Map.map[ghost.Y + 1, ghost.X + 1] != '#')
+                    || (ghost.Y + 2 == myPacMan.Y && level1Map.map[ghost.Y + 1, ghost.X + 1] != '#')
+                    )))
                 {
-                    if (ghost.X - 2 == myPacMan.X &&
-                        ((ghost.Y == myPacMan.Y && level1Map.map[ghost.Y,ghost.X - 1]!= '#') 
-                        || (ghost.Y-2 == myPacMan.Y && level1Map.map[ghost.Y-1, ghost.X - 1] != '#') 
-                        || (ghost.Y -1== myPacMan.Y && level1Map.map[ghost.Y - 1, ghost.X - 1] != '#') 
-                        || (ghost.Y+1 == myPacMan.Y && level1Map.map[ghost.Y + 1, ghost.X - 1] != '#') 
-                        || (ghost.Y+2 == myPacMan.Y && level1Map.map[ghost.Y + 1, ghost.X - 1] != '#')
-                        )
-                        || ghost.X - 1 == myPacMan.X &&
-                        ((ghost.Y == myPacMan.Y)
-                        || (ghost.Y - 2 == myPacMan.Y && level1Map.map[ghost.Y - 1, ghost.X - 1] != '#')
-                        || (ghost.Y - 1 == myPacMan.Y)
-                        || (ghost.Y + 1 == myPacMan.Y)
-                        || (ghost.Y + 2 == myPacMan.Y && level1Map.map[ghost.Y + 1, ghost.X - 1] != '#')
-                        )
-                        || ghost.X==myPacMan.X &&
-                        (((ghost.Y - 2 == myPacMan.Y && level1Map.map[ghost.Y - 1, ghost.X] != '#')
-                        || (ghost.Y - 1 == myPacMan.Y)
-                        || (ghost.Y + 1 == myPacMan.Y)
-                        || (ghost.Y + 2 == myPacMan.Y && level1Map.map[ghost.Y + 1, ghost.X] != '#')
-                        )
-                        || ghost.X +1 == myPacMan.X &&
-                        ((ghost.Y == myPacMan.Y)
-                        || (ghost.Y - 2 == myPacMan.Y && level1Map.map[ghost.Y - 1, ghost.X - 1] != '#')
-                        || (ghost.Y - 1 == myPacMan.Y)
-                        || (ghost.Y + 1 == myPacMan.Y)
-                        || (ghost.Y + 2 == myPacMan.Y && level1Map.map[ghost.Y + 1, ghost.X - 1] != '#')
-                        )
-                        || ghost.X + 2 == myPacMan.X &&
-                        ((ghost.Y == myPacMan.Y && level1Map.map[ghost.Y, ghost.X + 1] != '#')
-                        || (ghost.Y - 2 == myPacMan.Y && level1Map.map[ghost.Y - 1, ghost.X + 1] != '#')
-                        || (ghost.Y - 1 == myPacMan.Y && level1Map.map[ghost.Y - 1, ghost.X + 1] != '#')
-                        || (ghost.Y + 1 == myPacMan.Y && level1Map.map[ghost.Y + 1, ghost.X + 1] != '#')
-                        || (ghost.Y + 2 == myPacMan.Y && level1Map.map[ghost.Y + 1, ghost.X + 1] != '#')
-                        ))){
-                        ghost.GhostState = Ghost.State.chasing;
-                        ghost.GoTo(myPacMan.X, myPacMan.Y, level1Map);
-                        ghost.GoTo(myPacMan.X, myPacMan.Y, level1Map);
+                    ghost.GhostState = Ghost.State.chasing;
+                    ghost.GoTo(myPacMan.X, myPacMan.Y, level1Map);
 
-                    }
-                    else if (ghost.Weakness)
-                    {
-                        ghost.GhostState = Ghost.State.runningAway;
-                        ghost.RunAway(myPacMan.X,myPacMan.Y,level1Map);
-                    }
-                    else
-                    {
-                        if((ghost.DefaultPositionX!=ghost.X || ghost.DefaultPositionY!=ghost.Y) && ghost.GhostState != Ghost.State.movingInPath)
-                        {
-                            ghost.GoTo(ghost.DefaultPositionX, ghost.DefaultPositionY, level1Map);
-                            ghost.GoTo(ghost.DefaultPositionX, ghost.DefaultPositionY, level1Map);
-
-                        }
-                        else if(ghost.DefaultPositionX == ghost.X && ghost.DefaultPositionY == ghost.Y && ghost.GhostState != Ghost.State.movingInPath)
-                        {
-                            ghost.GhostState= Ghost.State.movingInPath;
-
-                        }
-                        else if(ghost.GhostState == Ghost.State.movingInPath)
-                        {
-                            ghost.Movement(level1Map, ghost.PathList);
-                        }
-                    }
                 }
-                level1Map.PrintMap(characters);
-                checkGameOver();
+                else if (ghost.Weakness)
+                {
+                    ghost.GhostState = Ghost.State.runningAway;
+                    ghost.RunAway(myPacMan.X, myPacMan.Y, level1Map);
+                }
+                else if (ghost.GhostState == Ghost.State.movingInPath)
+                {
+                    ghost.Movement(level1Map);
+                    ghost.Movement(level1Map);
+                }
+                else if ((ghost.DefaultPositionX != ghost.X || ghost.DefaultPositionY != ghost.Y) && ghost.GhostState != Ghost.State.movingInPath)
+                {
+                    ghost.GoTo(ghost.DefaultPositionX, ghost.DefaultPositionY, level1Map);
+
+                }
+                else if (ghost.DefaultPositionX == ghost.X && ghost.DefaultPositionY == ghost.Y && ghost.GhostState != Ghost.State.movingInPath)
+                {
+                    ghost.GhostState = Ghost.State.movingInPath;
+
+                }
+            }
+
+            level1Map.PrintMap(characters);
+            checkGameOver();
             //}
         }
 

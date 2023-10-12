@@ -29,23 +29,24 @@ namespace Movement
         //List<Direction> pathList = new List<Direction>();
         int defaultPositionX;
         int defaultPositionY;
-        int pathListIndex = 0;
         bool weakness;
         int[][] pathCoorArr;
-        int i = 0;
+        bool reachedPoint1;
+        bool reachedPoint2;
+
         State state;
-        List<Direction> pathList;
         List<Direction> chasePath;
 
         public Ghost(int x, int y, int[][] coorArr)
         {
+            reachedPoint1=false;
+            reachedPoint2 = false;
             state = State.movingInPath;
             defaultPositionX = x;
             defaultPositionY = y;
             X = x;
             Y = y;
             PathCoorArr = coorArr;
-            PathList = new List<Direction>();
             chasePath = new List<Direction>();
             Type = "ghost";
             Symbol = '†';
@@ -79,156 +80,33 @@ namespace Movement
             set { weakness = value; }
         }
 
-        public List<Direction> PathList
+        public void Movement(Map levelMap)
         {
-            get { return pathList; }
-            set { pathList = value; }
-        }
-
-        public void SetRoad(Map levelMap)
-        {
-            int[] currentPos = { X, Y };
-            Direction direction = Direction.Stop;
-
-            foreach (var item in PathCoorArr)
+            if (!reachedPoint1 && !reachedPoint2)
             {
-                while (currentPos[0] != item[0])
-                {
-                    if (item[0] - currentPos[0] > 0)
-                    {
-                        direction = Direction.Right;
-                        currentPos[0] += 1;
-                    }
-                    else if (item[0] - currentPos[0] < 0)
-                    {
-                        direction = Direction.Left;
-                        currentPos[0] -= 1;
-                    }
-                    PathList.Add(direction);
-                }
-                while (currentPos[1] != item[1])
-                {
-                    if (item[1] - currentPos[1] > 0)
-                    {
-                        direction = Direction.Down;
-                        currentPos[1] += 1;
-                    }
-                    else if (item[1] - currentPos[1] < 0)
-                    {
-                        direction = Direction.Up;
-                        currentPos[1] -= 1;
-                    }
-                    PathList.Add(direction);
-                }
+               GoTo(pathCoorArr[0][0], pathCoorArr[0][1], levelMap);
+                if(X== pathCoorArr[0][0] && Y== pathCoorArr[0][1])
+                    reachedPoint1 = true;
             }
-
-        }
-
-        public void Movement(Map levelMap, List<Direction> pathToMove)
-        {
-            if (Y == PathCoorArr[1][1] && X == PathCoorArr[1][0])
+            else if (reachedPoint1 && !reachedPoint2)
             {
-                ReversePath();
-
+                GoTo(pathCoorArr[1][0], pathCoorArr[1][1], levelMap);
+                if (X == pathCoorArr[1][0] && Y == pathCoorArr[1][1])
+                    reachedPoint2 = true;
             }
-            if (i < pathToMove.Count)
+            else if(reachedPoint1 && reachedPoint2)
             {
-                if (pathToMove[i] == Direction.Left)
-                {
-                    if (levelMap.map[Y, X - 1] != '#' && levelMap.map[Y, X - 1] == '-')
-                    {
-                        levelMap.map[Y, X] = '-';
-                        X--;
-                    }
-                    else
-                    {
-                        levelMap.map[Y, X] = ' ';
-                        X--;
-                    }
-                    Spawn(levelMap);
-                }
-                else if (pathToMove[i] == Direction.Right)
-                {
-                    if (levelMap.map[Y, X + 1] != '#' && levelMap.map[Y, X + 1] == '-')
-                    {
-                        levelMap.map[Y, X] = '-';
-                        X++;
-                    }
-                    else
-                    {
-                        levelMap.map[Y, X] = ' ';
-                        X++;
-                    }
-                    Spawn(levelMap);
-                }
-                else if (pathToMove[i] == Direction.Up)
-                {
-                    if (levelMap.map[Y - 1, X] != '#' && levelMap.map[Y - 1, X] == '-')
-                    {
-                        levelMap.map[Y, X] = '-';
-                        Y--;
-                    }
-                    else
-                    {
-                        levelMap.map[Y, X] = ' ';
-                        Y--;
-                    }
-                    Spawn(levelMap);
-                }
-                else if (pathToMove[i] == Direction.Down)
-                {
-                    if (levelMap.map[Y + 1, X] != '#' && levelMap.map[Y + 1, X] == '-')
-                    {
-                        levelMap.map[Y, X] = '-';
-                        Y++;
-                    }
-                    else
-                    {
-                        levelMap.map[Y, X] = ' ';
-                        Y++;
-                    }
-                    Spawn(levelMap);
-                }
-                else
-                {
-                    Console.WriteLine("Err");
-                }
-                i++;
+                GoTo(pathCoorArr[0][0], pathCoorArr[0][1], levelMap);
+                if (X == pathCoorArr[0][0] && Y == pathCoorArr[0][1])
+                    reachedPoint1 = false;
+            }
+            else if(!reachedPoint1 && reachedPoint2)
+            {
+                GoTo(defaultPositionX, defaultPositionY, levelMap);
+                if (X == pathCoorArr[1][0] && Y == pathCoorArr[1][1])
+                    reachedPoint2 = false;
             }
         }
-
-        public void ReversePath()
-        {
-            if (pathListIndex == PathList.Count)
-            {
-                PathList.Reverse();
-                List<Direction> pathListReverse = new List<Direction>();
-                int index = 0;
-                foreach (var item in PathList)
-                {
-                    if (item == Direction.Left)
-                    {
-                        pathListReverse.Add(Direction.Right);
-                    }
-                    else if (item == Direction.Up)
-                    {
-                        pathListReverse.Add(Direction.Down);
-                    }
-                    else if (item == Direction.Down)
-                    {
-                        pathListReverse.Add(Direction.Up);
-                    }
-                    else if (item == Direction.Right)
-                    {
-                        pathListReverse.Add(Direction.Left);
-                    }
-                    index++;
-                }
-                PathList = pathListReverse;
-                pathListIndex = 0;
-            }
-        }
-
 
         public void GoTo(int targetX, int targetY, Map levelMap)
         {
@@ -296,10 +174,7 @@ namespace Movement
                     }
                 }
             }
-            else
-            {
-                Console.Write("We have a problem");
-            }
+
 
 
 
@@ -311,11 +186,11 @@ namespace Movement
             {
                 if (!TryUp(levelMap))
                 {
-                    if (!TryLeft(levelMap))
+                    if (!TryRight(levelMap))
                     {
                         if (!TryDown(levelMap))
                         {
-                            if (!TryRight(levelMap))
+                            if (!TryLeft(levelMap))
                             {
                                 Console.WriteLine("Error ghost trapped");
                             }
@@ -327,11 +202,11 @@ namespace Movement
             {
                 if (!TryUp(levelMap))
                 {
-                    if (!TryRight(levelMap))
+                    if (!TryLeft(levelMap))
                     {
                         if (!TryDown(levelMap))
                         {
-                            if (!TryLeft(levelMap))
+                            if (!TryRight(levelMap))
                             {
                                 Console.WriteLine("Error ghost trapped");
                             }
@@ -343,11 +218,11 @@ namespace Movement
             {
                 if (!TryDown(levelMap))
                 {
-                    if (!TryLeft(levelMap))
+                    if (!TryRight(levelMap))
                     {
                         if (!TryUp(levelMap))
                         {
-                            if (!TryRight(levelMap))
+                            if (!TryLeft(levelMap))
                             {
                                 Console.WriteLine("Error ghost trapped");
                             }
@@ -359,11 +234,11 @@ namespace Movement
             {
                 if (!TryDown(levelMap))
                 {
-                    if (!TryRight(levelMap))
+                    if (!TryLeft(levelMap))
                     {
                         if (!TryUp(levelMap))
                         {
-                            if (!TryLeft(levelMap))
+                            if (!TryRight(levelMap))
                             {
                                 Console.WriteLine("Error ghost trapped");
                             }
@@ -394,6 +269,7 @@ namespace Movement
                 }
                 else
                 {
+                    levelMap.map[Y, X] = ' ';
                     chasePath.Add(Direction.Up);
                     Y++;
                     Spawn(levelMap);
@@ -421,6 +297,7 @@ namespace Movement
                 }
                 else
                 {
+                    levelMap.map[Y, X] = ' ';
                     chasePath.Add(Direction.Down);
                     Y--;
                     Spawn(levelMap);
@@ -448,6 +325,7 @@ namespace Movement
                 }
                 else
                 {
+                    levelMap.map[Y, X] = ' ';
                     chasePath.Add(Direction.Left);
                     X++;
                     Spawn(levelMap);
@@ -475,6 +353,7 @@ namespace Movement
                 }
                 else
                 {
+                    levelMap.map[Y, X] = ' ';
                     chasePath.Add(Direction.Right);
                     X--;
                     Spawn(levelMap);
