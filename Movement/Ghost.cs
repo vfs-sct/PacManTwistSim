@@ -11,6 +11,13 @@ namespace Movement
 
     internal class Ghost : Character
     {
+
+        public enum State
+        {
+            chasing,
+            runningAway,
+            movingInPath
+        }
         public enum Direction
         {
             Up,
@@ -20,15 +27,21 @@ namespace Movement
             Stop
         }
         //List<Direction> pathList = new List<Direction>();
+        int defaultPositionX;
+        int defaultPositionY;
         int pathListIndex = 0;
         bool weakness;
         int[][] pathCoorArr;
         int i = 0;
+        State state;
         List<Direction> pathList;
         List<Direction> chasePath;
 
         public Ghost(int x, int y, int[][] coorArr)
         {
+            state = State.movingInPath;
+            defaultPositionX = x;
+            defaultPositionY = y;
             X = x;
             Y = y;
             PathCoorArr = coorArr;
@@ -38,11 +51,32 @@ namespace Movement
             Symbol = '†';
             weakness = false;
         }
+        public State GhostState
+        {
+            get { return state; }
+            set { state = value; }
+        }
+
+        public int DefaultPositionX
+        {
+            get { return defaultPositionX; }
+        }
+
+        public int DefaultPositionY
+        {
+            get { return defaultPositionY; }
+        }
 
         public int[][] PathCoorArr
         {
             get { return pathCoorArr; }
             set { pathCoorArr = value; }
+        }
+
+        public bool Weakness
+        {
+            get { return weakness; }
+            set { weakness = value; }
         }
 
         public List<Direction> PathList
@@ -55,9 +89,6 @@ namespace Movement
         {
             int[] currentPos = { X, Y };
             Direction direction = Direction.Stop;
-
-            //Console.WriteLine("StartPoint {0} EndPoint {1}", currentPos[0], coorArr[0][0]);
-            //Console.WriteLine("StartPoint {0} EndPoint {1}", currentPos[1], coorArr[0][1]);
 
             foreach (var item in PathCoorArr)
             {
@@ -198,15 +229,10 @@ namespace Movement
             }
         }
 
-        public bool Weakness
-        {
-            get { return weakness; }
-            set { weakness = value; }
-        }
 
-        public void Chase(PacMan pacMan, Map levelMap)
+        public void GoTo(int targetX, int targetY, Map levelMap)
         {
-            if (pacMan.X >= X && pacMan.Y > Y)
+            if (targetX >= X && targetY > Y)
             {
                 if (!TryDown(levelMap))
                 {
@@ -222,7 +248,7 @@ namespace Movement
                     }
                 }
             }
-            else if (pacMan.X < X && pacMan.Y > Y)
+            else if (targetX < X && targetY > Y)
             {
                 if (!TryDown(levelMap))
                 {
@@ -238,7 +264,7 @@ namespace Movement
                     }
                 }
             }
-            else if (pacMan.X >= X && pacMan.Y <= Y)
+            else if (targetX >= X && targetY <= Y)
             {
                 if (!TryUp(levelMap))
                 {
@@ -254,7 +280,7 @@ namespace Movement
                     }
                 }
             }
-            else if (pacMan.X < X && pacMan.Y <= Y)
+            else if (targetX < X && targetY <= Y)
             {
                 if (!TryUp(levelMap))
                 {
@@ -279,9 +305,9 @@ namespace Movement
 
         }
 
-        public void RunAway(PacMan pacMan, Map levelMap)
+        public void RunAway(int targetX, int targetY, Map levelMap)
         {
-            if (pacMan.X >= X && pacMan.Y > Y)
+            if (targetX >= X && targetY > Y)
             {
                 if (!TryUp(levelMap))
                 {
@@ -297,7 +323,7 @@ namespace Movement
                     }
                 }
             }
-            else if (pacMan.X < X && pacMan.Y > Y)
+            else if (targetX < X && targetY > Y)
             {
                 if (!TryUp(levelMap))
                 {
@@ -313,7 +339,7 @@ namespace Movement
                     }
                 }
             }
-            else if (pacMan.X >= X && pacMan.Y <= Y)
+            else if (targetX >= X && targetY <= Y)
             {
                 if (!TryDown(levelMap))
                 {
@@ -329,7 +355,7 @@ namespace Movement
                     }
                 }
             }
-            else if (pacMan.X < X && pacMan.Y <= Y)
+            else if (targetX < X && targetY <= Y)
             {
                 if (!TryDown(levelMap))
                 {
@@ -462,29 +488,5 @@ namespace Movement
 
         }
 
-        public void ReverseChase()
-        {
-            chasePath.Reverse();
-            List<Direction> chasePathReverse = new List<Direction>();
-            foreach (var item in chasePath)
-            {
-                if (item == Direction.Left)
-                {
-                    chasePathReverse.Add(Direction.Right);
-                }
-                else if (item == Direction.Up)
-                {
-                    chasePathReverse.Add(Direction.Down);
-                }
-                else if (item == Direction.Down)
-                {
-                    chasePathReverse.Add(Direction.Up);
-                }
-                else if (item == Direction.Right)
-                {
-                    chasePathReverse.Add(Direction.Left);
-                }
-            }
-        }
     }
 }

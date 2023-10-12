@@ -161,16 +161,77 @@ namespace Movement
         private static void interval(object sender, ElapsedEventArgs e)
         {
             //Console.Write(count++);
-            count++;
-            if (count % 2 == 0)
-            {
+            //count++;
+            //if (count % 2 == 0)
+            //{
                 foreach (var ghost in ghostArr)
                 {
-                    ghost.Movement(level1Map);
+                    if (ghost.X - 2 == myPacMan.X &&
+                        ((ghost.Y == myPacMan.Y && level1Map.map[ghost.Y,ghost.X - 1]!= '#') 
+                        || (ghost.Y-2 == myPacMan.Y && level1Map.map[ghost.Y-1, ghost.X - 1] != '#') 
+                        || (ghost.Y -1== myPacMan.Y && level1Map.map[ghost.Y - 1, ghost.X - 1] != '#') 
+                        || (ghost.Y+1 == myPacMan.Y && level1Map.map[ghost.Y + 1, ghost.X - 1] != '#') 
+                        || (ghost.Y+2 == myPacMan.Y && level1Map.map[ghost.Y + 1, ghost.X - 1] != '#')
+                        )
+                        || ghost.X - 1 == myPacMan.X &&
+                        ((ghost.Y == myPacMan.Y)
+                        || (ghost.Y - 2 == myPacMan.Y && level1Map.map[ghost.Y - 1, ghost.X - 1] != '#')
+                        || (ghost.Y - 1 == myPacMan.Y)
+                        || (ghost.Y + 1 == myPacMan.Y)
+                        || (ghost.Y + 2 == myPacMan.Y && level1Map.map[ghost.Y + 1, ghost.X - 1] != '#')
+                        )
+                        || ghost.X==myPacMan.X &&
+                        (((ghost.Y - 2 == myPacMan.Y && level1Map.map[ghost.Y - 1, ghost.X] != '#')
+                        || (ghost.Y - 1 == myPacMan.Y)
+                        || (ghost.Y + 1 == myPacMan.Y)
+                        || (ghost.Y + 2 == myPacMan.Y && level1Map.map[ghost.Y + 1, ghost.X] != '#')
+                        )
+                        || ghost.X +1 == myPacMan.X &&
+                        ((ghost.Y == myPacMan.Y)
+                        || (ghost.Y - 2 == myPacMan.Y && level1Map.map[ghost.Y - 1, ghost.X - 1] != '#')
+                        || (ghost.Y - 1 == myPacMan.Y)
+                        || (ghost.Y + 1 == myPacMan.Y)
+                        || (ghost.Y + 2 == myPacMan.Y && level1Map.map[ghost.Y + 1, ghost.X - 1] != '#')
+                        )
+                        || ghost.X + 2 == myPacMan.X &&
+                        ((ghost.Y == myPacMan.Y && level1Map.map[ghost.Y, ghost.X + 1] != '#')
+                        || (ghost.Y - 2 == myPacMan.Y && level1Map.map[ghost.Y - 1, ghost.X + 1] != '#')
+                        || (ghost.Y - 1 == myPacMan.Y && level1Map.map[ghost.Y - 1, ghost.X + 1] != '#')
+                        || (ghost.Y + 1 == myPacMan.Y && level1Map.map[ghost.Y + 1, ghost.X + 1] != '#')
+                        || (ghost.Y + 2 == myPacMan.Y && level1Map.map[ghost.Y + 1, ghost.X + 1] != '#')
+                        ))){
+                        ghost.GhostState = Ghost.State.chasing;
+                        ghost.GoTo(myPacMan.X, myPacMan.Y, level1Map);
+                        ghost.GoTo(myPacMan.X, myPacMan.Y, level1Map);
+
+                    }
+                    else if (ghost.Weakness)
+                    {
+                        ghost.GhostState = Ghost.State.runningAway;
+                        ghost.RunAway(myPacMan.X,myPacMan.Y,level1Map);
+                    }
+                    else
+                    {
+                        if((ghost.DefaultPositionX!=ghost.X || ghost.DefaultPositionY!=ghost.Y) && ghost.GhostState != Ghost.State.movingInPath)
+                        {
+                            ghost.GoTo(ghost.DefaultPositionX, ghost.DefaultPositionY, level1Map);
+                            ghost.GoTo(ghost.DefaultPositionX, ghost.DefaultPositionY, level1Map);
+
+                        }
+                        else if(ghost.DefaultPositionX == ghost.X && ghost.DefaultPositionY == ghost.Y && ghost.GhostState != Ghost.State.movingInPath)
+                        {
+                            ghost.GhostState= Ghost.State.movingInPath;
+
+                        }
+                        else if(ghost.GhostState == Ghost.State.movingInPath)
+                        {
+                            ghost.Movement(level1Map, ghost.PathList);
+                        }
+                    }
                 }
                 level1Map.PrintMap(characters);
                 checkGameOver();
-            }
+            //}
         }
 
         private static void CreateBigDotsAndCherry()
