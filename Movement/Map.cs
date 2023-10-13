@@ -48,7 +48,7 @@ namespace Movement
                 return;
             }
             mapPrinting = true;
-            Console.Clear();
+            //Console.Clear();
             for (int i = 0; i < map.GetLength(0); i++)
             {
                 for (int j = 0; j < map.GetLength(1); j++)
@@ -64,6 +64,7 @@ namespace Movement
                         }
 
                     }
+                    Console.SetCursorPosition(j, i);
                     Console.Write(map[i, j]);
 
                     Console.ForegroundColor = ConsoleColor.White;
