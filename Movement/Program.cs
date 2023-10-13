@@ -6,6 +6,7 @@ using static System.Formats.Asn1.AsnWriter;
 
 namespace Movement
 {
+    //Main class of the program where we set up the map and needed variables
     internal class Program
     {
         public static int count = 0;
@@ -18,24 +19,30 @@ namespace Movement
         public static int score = 0;
         public static bool playing = true;
 
+        //Main function of the program that initializes maps, states and reads player input
         static void Main(string[] args)
         {
-            ActivateInterval();
+            ActivateInterval(); //Activates the interval for ghost movements
+
+            //Creates teh pacman character for the board
             PacMan pacman = new PacMan();
             characters.Add(pacman);
             myPacMan = pacman;
 
-            asignGhost();
-            pacman.Spawn(level1Map);
+            asignGhost(); //Creates and assign ghosts in the board
+
+            pacman.Spawn(level1Map); //Spawns the pacman character inside the board
 
 
-            level1Map.InitializeItemMap();
+            level1Map.InitializeItemMap(); //Function that initializes the item map for the game
+
+            //Double loop that changes the spaces from the map into base dots 
             for (int i = 0; i < level1Map.itemMap.GetLength(0); i++)
             {
                 for (int j = 0; j < level1Map.itemMap.GetLength(1); j++)
                 {
                     BaseDot dotCell = new BaseDot();
-                    if (level1Map.map[i, j] != '#' && level1Map.map[i, j] != '†' && level1Map.map[i, j] != '■')
+                    if (CheckSpaceAvailable(j, i))
                     {
                         level1Map.map[i, j] = dotCell.Symbol;
                         level1Map.itemMap[i, j] = dotCell;
@@ -43,15 +50,16 @@ namespace Movement
                 }
             }
 
-            CreateBigDotsAndCherry();
+            CreateBigDotsAndCherry(); //Calls the function to add Big dots and a cherry in the map
 
-            level1Map.PrintMap(characters, score);
+            level1Map.PrintMap(characters, score); //Prints the initial state of the map
 
             //foreach (var gho in ghostArr)
             //{
             //    gho.SetRoad(level1Map);
             //}
 
+            //Game loop that checks for game over conditions and moves the pacman with user key input, while also checking if the player obtained items and adds the points/activates power ups
             while (playing)
             {
                 pacman.MoveWithInput(level1Map);
@@ -102,15 +110,18 @@ namespace Movement
             //ghost3.Spawn(level1Map);
         }
 
+        //Function that checks the conditions for a game over
         private static void checkGameOver()
         {
             foreach (var ghost in ghostArr)
             {
+                //Checks if the player touched a ghost when it's not weakened by a Big Dot
                 if (ghost.X == myPacMan.X && ghost.Y == myPacMan.Y && ghost.Weakness == false)
                 {
                     playing = false;
                     gameOver("GameOver");
                 }
+                //Add points to the score if the player touches a ghost that is in the weakened state
                 else if (ghost.X == myPacMan.X && ghost.Y == myPacMan.Y && ghost.Weakness == true)
                 {
                     switch (ghostEaten)
@@ -134,13 +145,16 @@ namespace Movement
                         default:
                             break;
                     }
-                }else if (score >= 1000)
+                }
+                //If the player achieves a certain amount of points, it wins the game
+                else if (score >= 1000)
                 {
                     gameOver("Victory");
                 }
             }
         }
 
+        //Function that ends the game when a condition of victory is achieved or the player dies against the ghosts
         private static void gameOver(string context)
         {
             Console.Clear();
@@ -148,6 +162,7 @@ namespace Movement
             Console.WriteLine(context);
         }
 
+        //Function to activa the interval where ghost will move at a specific pace around the map 
         private static void ActivateInterval()
         {
             myTimer.Elapsed += interval;
@@ -156,17 +171,15 @@ namespace Movement
             myTimer.Start();
         }
 
+        //Stops the interval when the game ends
         private static void stopInterval()
         {
             myTimer.Enabled = false;
         }
 
+        
         private static void interval(object sender, ElapsedEventArgs e)
         {
-            //Console.Write(count++);
-            //count++;
-            //if (count % 2 == 0)
-            //{
             foreach (var ghost in ghostArr)
             {
                 if (ghost.X - 2 == myPacMan.X &&
@@ -234,15 +247,21 @@ namespace Movement
             //}
         }
 
+        //Method to add big dots and a cherry to the map
         private static void CreateBigDotsAndCherry()
         {
+            //An amount of 4 Big dots will be added to the map
             int amountOfBigDots = 4;
             Random rdm = new Random();
+
             while (amountOfBigDots >= 0)
             {
+                //Create random coordinates to place the big dots around the map
                 int randomX = rdm.Next(1, level1Map.map.GetLength(1) - 1);
                 int randomY = rdm.Next(1, level1Map.map.GetLength(0) - 1);
-                if (level1Map.map[randomY, randomX] != '#' && level1Map.map[randomY, randomX] != '†' && level1Map.map[randomY, randomX] != '■')
+
+                //If the coordinates created are either a wall, ghost or pacman itself, don't add the big dot and try again
+                if (CheckSpaceAvailable(randomX, randomY))
                 {
                 BigDot bigDotCell = new BigDot(randomX, randomY);
                 level1Map.itemMap[randomY, randomX] = bigDotCell;
@@ -251,14 +270,24 @@ namespace Movement
                 }
             }
 
+            //Here we create random coordinates for the cherry, currently we try to add it to the map but if the coordinate is a wall, ghost or map, we don't add it
             int randomCherryX = rdm.Next(1, level1Map.map.GetLength(1) - 1);
             int randomCherryY = rdm.Next(1, level1Map.map.GetLength(0) - 1);
-            if (level1Map.map[randomCherryY, randomCherryX] != '#' && level1Map.map[randomCherryY, randomCherryX] != '†' && level1Map.map[randomCherryY, randomCherryX] != '■')
+            if (CheckSpaceAvailable(randomCherryX, randomCherryY))
             {
                 Cherry randomCherry = new Cherry(randomCherryX, randomCherryY);
                 level1Map.itemMap[randomCherryY, randomCherryX] = randomCherry;
                 randomCherry.Spawn(level1Map);
             }
+        }
+
+        //Function that checks if the selected coordinate is not a wall, pacman or ghost
+        private static bool CheckSpaceAvailable(int coordinateX, int coordinateY)
+        {
+            if (level1Map.map[coordinateY, coordinateX] != '#' && level1Map.map[coordinateY, coordinateX] != '†' && level1Map.map[coordinateY, coordinateX] != '■')
+                return true;
+            else
+                return false;
         }
     }
 
