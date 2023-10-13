@@ -365,9 +365,9 @@ namespace Movement
         {
             if (levelMap.map[Y + 1, X] != '#' && (chasePath.Count == 0 || chasePath.Last() != Direction.Up))
             {
-                if (levelMap.map[Y + 1, X] == '-')
+                if (levelMap.map[Y + 1, X] == '·')
                 {
-                    levelMap.map[Y, X] = '-';
+                    levelMap.map[Y, X] = '·';
                     chasePath.Add(Direction.Down);
                     Y++;
                     Spawn(levelMap);
@@ -393,9 +393,9 @@ namespace Movement
         {
             if (levelMap.map[Y - 1, X] != '#' && (chasePath.Count == 0 || chasePath.Last() != Direction.Down))
             {
-                if (levelMap.map[Y - 1, X] == '-')
+                if (levelMap.map[Y - 1, X] == '·')
                 {
-                    levelMap.map[Y, X] = '-';
+                    levelMap.map[Y, X] = '·';
                     chasePath.Add(Direction.Up);
                     Y--;
                     Spawn(levelMap);
@@ -421,9 +421,9 @@ namespace Movement
         {
             if (levelMap.map[Y, X + 1] != '#' && (chasePath.Count == 0 || chasePath.Last() != Direction.Left))
             {
-                if (levelMap.map[Y, X + 1] == '-')
+                if (levelMap.map[Y, X + 1] == '·')
                 {
-                    levelMap.map[Y, X] = '-';
+                    levelMap.map[Y, X] = '·';
                     chasePath.Add(Direction.Right);
                     X++;
                     Spawn(levelMap);
@@ -449,9 +449,9 @@ namespace Movement
         {
             if (levelMap.map[Y, X - 1] != '#' && (chasePath.Count == 0 || chasePath.Last() != Direction.Right))
             {
-                if (levelMap.map[Y, X - 1] == '-')
+                if (levelMap.map[Y, X - 1] == '·')
                 {
-                    levelMap.map[Y, X] = '-';
+                    levelMap.map[Y, X] = '·';
                     chasePath.Add(Direction.Left);
                     X--;
                     Spawn(levelMap);

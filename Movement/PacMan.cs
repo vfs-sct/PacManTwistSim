@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace Movement
 {
+    //Class that represents the character of pacman
     internal class PacMan:Character
     {
+        //Constructor that assigns a default position for pacman, it's type and symbol
         public PacMan()
         {
             X = 2;
@@ -16,46 +18,50 @@ namespace Movement
             Symbol = '■';
         }
 
+        //Method that moves pacman with user input and moves the character around the map
         public void MoveWithInput(Map levelMap)
         {
             ConsoleKey input = Console.ReadKey().Key;
             if (input == ConsoleKey.LeftArrow)
             {
-                if (levelMap.map[Y, X - 1] != '#')
+                if (CheckWall(Y, X -1, levelMap))
                 {
-                    levelMap.map[Y, X] = ' ';
                     X--;
                 }
-                Spawn(levelMap);
-
             }
             else if (input == ConsoleKey.RightArrow)
             {
-                if (levelMap.map[Y, X + 1] != '#')
+                if (CheckWall(Y, X + 1, levelMap))
                 {
-                    levelMap.map[Y, X] = ' ';
                     X++;
                 }
-                Spawn(levelMap);
             }
             else if (input == ConsoleKey.UpArrow)
             {
-                if (levelMap.map[Y - 1, X] != '#')
+                if (CheckWall(Y - 1, X , levelMap))
                 {
-                    levelMap.map[Y, X] = ' ';
                     Y--;
                 }
-                Spawn(levelMap);
             }
             else if (input == ConsoleKey.DownArrow)
             {
-                if (levelMap.map[Y + 1, X] != '#')
-                {
-                    levelMap.map[Y, X] = ' ';
+                if (CheckWall(Y + 1, X, levelMap))
+                { 
                     Y++;
                 }
-                Spawn(levelMap);
             }
+            Spawn(levelMap);
+        }
+
+        //Checks if there is a wall nearby of pacman and the direction is heading towards, preventing it from going through it
+        private bool CheckWall(int coordinateX, int coordinateY, Map levelMap)
+        {
+            if (levelMap.map[coordinateX, coordinateY] != '#')
+            {
+                levelMap.map[Y, X] = ' ';
+                return true;
+            }
+            else { return false; }
         }
 
     }
