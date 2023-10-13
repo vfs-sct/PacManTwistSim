@@ -109,7 +109,7 @@ namespace Movement
                 if (ghost.X == myPacMan.X && ghost.Y == myPacMan.Y && ghost.Weakness == false)
                 {
                     playing = false;
-                    gameOver();
+                    gameOver("GameOver");
                 }
                 else if (ghost.X == myPacMan.X && ghost.Y == myPacMan.Y && ghost.Weakness == true)
                 {
@@ -134,16 +134,18 @@ namespace Movement
                         default:
                             break;
                     }
+                }else if (score >= 20000)
+                {
+                    gameOver("Victory");
                 }
             }
         }
 
-        private static void gameOver()
+        private static void gameOver(string context)
         {
             Console.Clear();
-
             stopInterval();
-            Console.WriteLine("GameOver");
+            Console.WriteLine(context);
         }
 
         private static void ActivateInterval()
