@@ -58,15 +58,16 @@ namespace Movement
                         if (character.X == j && character.Y == i)
                         {
                             if (character.Type == "pacman")
+                            {
                                 Console.ForegroundColor = ConsoleColor.Yellow;
+                            }
+                                
                             else if (character.Type == "ghost")
                                 Console.ForegroundColor = ConsoleColor.Red;
                         }
-
                     }
                     Console.SetCursorPosition(j, i);
                     Console.Write(map[i, j]);
-
                     Console.ForegroundColor = ConsoleColor.White;
                 }
                 Console.Write("\n");
