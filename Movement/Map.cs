@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace Movement
 {
@@ -40,7 +41,7 @@ namespace Movement
         public Item[,] itemMap;
 
         public bool mapPrinting = false;
-        public void PrintMap(List<Character> characters)
+        public void PrintMap(List<Character> characters, int score)
         {
             if (mapPrinting != false)
             {
@@ -69,6 +70,7 @@ namespace Movement
                 }
                 Console.Write("\n");
             }
+            Console.WriteLine("Score: {0}", score);
             mapPrinting = false;
         }
 

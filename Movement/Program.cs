@@ -45,7 +45,7 @@ namespace Movement
 
             CreateBigDotsAndCherry();
 
-            level1Map.PrintMap(characters);
+            level1Map.PrintMap(characters, score);
 
             //foreach (var gho in ghostArr)
             //{
@@ -66,8 +66,8 @@ namespace Movement
                     level1Map.itemMap[pacman.Y, pacman.X].PowerUp(ghostArr);
                     level1Map.itemMap[pacman.Y, pacman.X] = null;
                 }
-                level1Map.PrintMap(characters);
-                Console.WriteLine("Score: {0}", score);
+                level1Map.PrintMap(characters, score);
+                
                 checkGameOver();
             }
         }
@@ -134,7 +134,7 @@ namespace Movement
                         default:
                             break;
                     }
-                }else if (score >= 20000)
+                }else if (score >= 1000)
                 {
                     gameOver("Victory");
                 }
@@ -229,7 +229,7 @@ namespace Movement
                 }
             }
 
-            level1Map.PrintMap(characters);
+            level1Map.PrintMap(characters, score);
             checkGameOver();
             //}
         }
@@ -242,18 +242,23 @@ namespace Movement
             {
                 int randomX = rdm.Next(1, level1Map.map.GetLength(1) - 1);
                 int randomY = rdm.Next(1, level1Map.map.GetLength(0) - 1);
-
+                if (level1Map.map[randomY, randomX] != '#' && level1Map.map[randomY, randomX] != '†' && level1Map.map[randomY, randomX] != '■')
+                {
                 BigDot bigDotCell = new BigDot(randomX, randomY);
                 level1Map.itemMap[randomY, randomX] = bigDotCell;
                 bigDotCell.Spawn(level1Map);
                 amountOfBigDots--;
+                }
             }
 
             int randomCherryX = rdm.Next(1, level1Map.map.GetLength(1) - 1);
             int randomCherryY = rdm.Next(1, level1Map.map.GetLength(0) - 1);
-            Cherry randomCherry = new Cherry(randomCherryX, randomCherryY);
-            level1Map.itemMap[randomCherryY, randomCherryX] = randomCherry;
-            randomCherry.Spawn(level1Map);
+            if (level1Map.map[randomCherryY, randomCherryX] != '#' && level1Map.map[randomCherryY, randomCherryX] != '†' && level1Map.map[randomCherryY, randomCherryX] != '■')
+            {
+                Cherry randomCherry = new Cherry(randomCherryX, randomCherryY);
+                level1Map.itemMap[randomCherryY, randomCherryX] = randomCherry;
+                randomCherry.Spawn(level1Map);
+            }
         }
     }
 
