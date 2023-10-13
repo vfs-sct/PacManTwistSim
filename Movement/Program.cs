@@ -83,14 +83,14 @@ namespace Movement
             ghostArr.Add(ghost);
             ghost.Spawn(level1Map);
 
-            //int[][] ghostCoorArr2 = new int[2][];
-            //ghostCoorArr2[0] = new int[] { 68, 20 };
-            //ghostCoorArr2[1] = new int[] { 75, 20 };
+            int[][] ghostCoorArr2 = new int[2][];
+            ghostCoorArr2[0] = new int[] { 39, 12 };
+            ghostCoorArr2[1] = new int[] { 43, 19 };
 
-            //Ghost ghost2 = new Ghost(68, 15, ghostCoorArr2);
-            //characters.Add(ghost2);
-            //ghostArr.Add(ghost2);
-            //ghost2.Spawn(level1Map);
+            Ghost ghost2 = new Ghost(46, 9, ghostCoorArr2);
+            characters.Add(ghost2);
+            ghostArr.Add(ghost2);
+            ghost2.Spawn(level1Map);
 
             //int[][] ghostCoorArr3 = new int[2][];
             //ghostCoorArr3[0] = new int[] { 26, 4 };
