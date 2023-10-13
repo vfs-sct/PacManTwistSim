@@ -11,7 +11,7 @@ namespace Movement
         
         public BaseDot() 
         {
-            Symbol = '-';
+            Symbol = '·';
             Points = 10;
             Type = "dot";
         }

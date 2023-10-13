@@ -13,7 +13,7 @@ namespace Movement
         {
             X = x;
             Y = y;
-            Symbol = '&';
+            Symbol = 'O';
             Points = 50;
             Type = "bigDot";
         }
