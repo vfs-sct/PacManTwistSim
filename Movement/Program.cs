@@ -54,10 +54,6 @@ namespace Movement
 
             level1Map.PrintMap(characters, score); //Prints the initial state of the map
 
-            //foreach (var gho in ghostArr)
-            //{
-            //    gho.SetRoad(level1Map);
-            //}
 
             //Game loop that checks for game over conditions and moves the pacman with user key input, while also checking if the player obtained items and adds the points/activates power ups
             while (playing)
@@ -80,8 +76,10 @@ namespace Movement
             }
         }
 
+        // initailze data for ghost
         private static void asignGhost()
         {
+            //set default path
             int[][] ghostCoorArr1 = new int[2][];
             ghostCoorArr1[0] = new int[] { 13, 5 };
             ghostCoorArr1[1] = new int[] { 12, 13 };
@@ -89,6 +87,7 @@ namespace Movement
             Ghost ghost = new Ghost(15, 11, ghostCoorArr1);
             characters.Add(ghost);
             ghostArr.Add(ghost);
+            //generate on the map
             ghost.Spawn(level1Map);
 
             int[][] ghostCoorArr2 = new int[2][];
@@ -99,15 +98,6 @@ namespace Movement
             characters.Add(ghost2);
             ghostArr.Add(ghost2);
             ghost2.Spawn(level1Map);
-
-            //int[][] ghostCoorArr3 = new int[2][];
-            //ghostCoorArr3[0] = new int[] { 26, 4 };
-            //ghostCoorArr3[1] = new int[] { 26, 2 };
-
-            //Ghost ghost3 = new Ghost(34, 4, ghostCoorArr3);
-            //characters.Add(ghost3);
-            //ghostArr.Add(ghost3);
-            //ghost3.Spawn(level1Map);
         }
 
         //Function that checks the conditions for a game over
@@ -162,7 +152,7 @@ namespace Movement
             Console.WriteLine(context);
         }
 
-        //Function to activa the interval where ghost will move at a specific pace around the map 
+        //Function to activate the interval where ghost will move at a specific pace around the map 
         private static void ActivateInterval()
         {
             myTimer.Elapsed += interval;
@@ -177,11 +167,13 @@ namespace Movement
             myTimer.Enabled = false;
         }
 
-        
+        //run interval every X second , for ghost movement
         private static void interval(object sender, ElapsedEventArgs e)
         {
+            //check each ghost on the map
             foreach (var ghost in ghostArr)
             {
+                //check if ghost and pacman is in 2 space for each direction and there are no wall in between
                 if (ghost.X - 2 == myPacMan.X &&
                     ((ghost.Y == myPacMan.Y && level1Map.map[ghost.Y, ghost.X - 1] != '#')
                     || (ghost.Y - 2 == myPacMan.Y && level1Map.map[ghost.Y - 1, ghost.X - 1] != '#')
@@ -217,34 +209,40 @@ namespace Movement
                     || (ghost.Y + 2 == myPacMan.Y && level1Map.map[ghost.Y + 1, ghost.X + 1] != '#')
                     )))
                 {
+                    //switch state to chasing
                     ghost.GhostState = Ghost.State.chasing;
                     ghost.GoTo(myPacMan.X, myPacMan.Y, level1Map);
 
                 }
+                // if pacman eat big dot and ghost turn to weak
                 else if (ghost.Weakness)
                 {
+                    //switch state to runningAway
                     ghost.GhostState = Ghost.State.runningAway;
                     ghost.RunAway(myPacMan.X, myPacMan.Y, level1Map);
                 }
                 else if (ghost.GhostState == Ghost.State.movingInPath)
                 {
+                    //normal movement, follow the path
                     ghost.Movement(level1Map);
                 }
+                // if not following the path
                 else if ((ghost.DefaultPositionX != ghost.X || ghost.DefaultPositionY != ghost.Y) && ghost.GhostState != Ghost.State.movingInPath)
                 {
+                    //set ghost position back to the track
                     ghost.GoTo(ghost.DefaultPositionX, ghost.DefaultPositionY, level1Map);
-
                 }
+                //ghost is in the path
                 else if (ghost.DefaultPositionX == ghost.X && ghost.DefaultPositionY == ghost.Y && ghost.GhostState != Ghost.State.movingInPath)
                 {
                     ghost.GhostState = Ghost.State.movingInPath;
-
                 }
             }
-
+            //PrintMap
             level1Map.PrintMap(characters, score);
+
+            //check if is Gameover
             checkGameOver();
-            //}
         }
 
         //Method to add big dots and a cherry to the map

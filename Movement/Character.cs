@@ -13,10 +13,9 @@ namespace Movement
         char symbol;
         string type;
         
-
+        // spawn character on the map
         public void Spawn(Map levelMap)
         {
-            //Console.Clear();
             levelMap.SetPosition(Y, X, symbol);
         }
 
@@ -43,8 +42,5 @@ namespace Movement
             get { return symbol; }
             set { symbol = value; }
         }
-
-        
-
     }
 }
